@@ -1,0 +1,20 @@
+{% extends "gallery/header.html" %}
+
+{% block content %}
+
+<header class="masthead mb-auto">
+    <h3 class="masthead-brand">
+          {% load static %}
+          <img src="../../static/gallery/img/logo.png" alt="The Gallery">
+    </h3>
+    <nav class="nav nav-masthead justify-content-center">
+      <a class="nav-link" href="/">Home</a>
+      <a class="nav-link active" href="/gallery/">Gallery</a>
+      <a class="nav-link" href="/api/">API</a>
+    </nav>
+</header>
+
+<img src="{{image.image_url}}">
+
+
+{% endblock %} 
