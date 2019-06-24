@@ -20,7 +20,7 @@ class Image(models.Model):
     image_slug = models.CharField(max_length=200)
     image_visible = models.BooleanField(default=False)
     image_title = models.CharField(max_length=200)
-    image_category = models.ForeignKey(ImageCategory, default=1, verbose_name="Category", on_delete=models.SET_DEFAULT)
+    image_category = models.ManyToManyField(ImageCategory, verbose_name="Category")
 
     def image_url(self):
         return str(self.image_picture.name).lstrip("gallery")

@@ -22,7 +22,8 @@ def random(request):
 
 def gallery(request):
     these_images = Image.objects.all()
-    return render(request, 'gallery/gallery.html', {"images": these_images})
+    these_categories = ImageCategory.objects.all()
+    return render(request, 'gallery/gallery.html', {"images": these_images, "categories": these_categories})
 
 def category_slug(request, category_slug):
     return HttpResponse(f"{category_slug} is not a category. Yet.")

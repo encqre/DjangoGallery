@@ -17,74 +17,63 @@
   <div class="row">
     <nav class="col-md-2 d-none d-md-block sidebar">
       <div class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">
-              <span data-feather="home"></span>
-              Dashboard <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
-        </ul>
-
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Saved reports</span>
+          <span>Sort by</span>
           <a class="d-flex align-items-center text-muted" href="#">
             <span data-feather="plus-circle"></span>
           </a>
         </h6>
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link active" href="#">
               <span data-feather="file-text"></span>
-              Current month
+              Newest first
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="file-text"></span>
-              Last quarter
+              Oldest first
+            </a>
+          </li>
+        </ul>
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Show categories</span>
+          <a class="d-flex align-items-center text-muted" href="#">
+            <span data-feather="plus-circle"></span>
+          </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              All
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item active" href="#">All</a>
+              <div class="dropdown-divider"></div>
+              {% for category in categories %}
+              <a class="dropdown-item" href="#">{{category.category}} ({{category.image_set.all.count}})</a>
+              {% endfor %}
+            </div>
+          </li>
+        </ul>
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+          <span>Display format</span>
+          <a class="d-flex align-items-center text-muted" href="#">
+            <span data-feather="plus-circle"></span>
+          </a>
+        </h6>
+        <ul class="nav flex-column mb-2">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">
+              <span data-feather="file-text"></span>
+              1 per page width
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="file-text"></span>
-              Social engagement
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Year-end sale
+              2 per page width
             </a>
           </li>
         </ul>
@@ -94,12 +83,21 @@
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       {% for image in images %}
 
-      <div class="card mb-3" style="max-width: 50%; left: 50%; transform: translate(-50%)">
+      <div class="card mb-3 text-white bg-dark border-dark" style="max-width: 50%; left: 50%; transform: translate(-50%)">
         <img src="{{image.image_url}}" class="card-img-top" alt="{{image.image_title}}">
         <div class="card-body">
       <h5 class="card-title">{{image.image_title}}</h5>
-      <p class="card-text">{{image.image_description}}</p>
-      <p class="card-text"><small class="text-muted">Image added: {{image.image_added}}</small></p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <p class="card-text"><small class="text-muted">Categories: {% for cat in image.image_category.all %}{{cat.category}}, {% endfor %}</small></p>
+    </div>
+    <div class="card-footer">
+        <small class="text-muted">Image added: {{image.image_added}}</small>
+        <div class="float-right">
+        <small>Categories:</small>
+        <a href="#" class="btn btn-secondary btn-sm">misc</a>
+        <a href="#" class="btn btn-secondary btn-sm">smug</a>
+        </div>
     </div>
   </div>
 
