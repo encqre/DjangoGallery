@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Image, ImageCategory
+from django.core.paginator import Paginator
 
 def single_slug(request, single_slug):
     images = [p.image_slug for p in Image.objects.all()]
@@ -21,8 +22,12 @@ def random(request):
     return HttpResponse('Random pic here')
 
 def gallery(request):
-    these_images = Image.objects.all()
+    all_images = Image.objects.all()
     these_categories = ImageCategory.objects.all()
+    paginator = Paginator(all_images, 5) #5 images per page
+
+    page = request.GET.get('page')
+    these_images = paginator.get_page(page)
     return render(request, 'gallery/gallery.html', {"images": these_images, "categories": these_categories})
 
 def category_slug(request, category_slug):
