@@ -24,10 +24,10 @@ def random(request):
 def gallery(request):
     all_images = Image.objects.all()
     these_categories = ImageCategory.objects.all()
-    paginator = Paginator(all_images, 5) #5 images per page
 
-    page = request.GET.get('page')
-    these_images = paginator.get_page(page)
+    pictures_per_page = request.GET.get('pictures')
+    if pictures_per_page == None:
+        pictures_per_page = 20
 
     images_per_width = request.GET.get('display')
     if images_per_width == "1":
@@ -40,6 +40,12 @@ def gallery(request):
         display_format = {"col_style":"col-3", "width":"w-100", "display":"4"}
     else:
         display_format = {"col_style":"col-6", "width":"w-100", "display":"2"}
+    
+    display_format.update({"pictures_per_page": pictures_per_page})
+    paginator = Paginator(all_images, int(pictures_per_page))
+
+    page = request.GET.get('page')
+    these_images = paginator.get_page(page)
 
     return render(request, 'gallery/gallery.html', {"images": these_images, "categories": these_categories, "display": display_format})
 
