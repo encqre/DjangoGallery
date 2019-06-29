@@ -18,20 +18,28 @@
     <nav class="col-md-2 d-none d-md-block sidebar">
       <div class="sidebar-sticky">
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Sort by</span>
+          <span>Order by</span>
           <a class="d-flex align-items-center text-muted" href="#">
             <span data-feather="plus-circle"></span>
           </a>
         </h6>
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
+              {% if display.order_by != 'oldest' %}
             <a class="nav-link active" href="#">
+              {% else %}
+              <a class="nav-link" href="?order=newest&display={{display.display}}&pictures={{display.pictures_per_page}}">
+                {% endif %}
               <span data-feather="file-text"></span>
               Newest first
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            {% if display.order_by == 'oldest' %}
+            <a class="nav-link active" href="#">
+            {% else %}
+            <a class="nav-link" href="?order=oldest&display={{display.display}}&pictures={{display.pictures_per_page}}">
+              {% endif %}
               <span data-feather="file-text"></span>
               Oldest first
             </a>
@@ -66,42 +74,42 @@
         <ul class="nav flex-column mb-2">
           <li class="nav-item">
             {% if display.display == '1' %}
-            <a class="nav-link active" href="?display=1&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link active" href="?display=1&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% else %}
-            <a class="nav-link" href="?display=1&page={{images.number}}&picture=s{{display.pictures_per_page}}">
+            <a class="nav-link" href="?display=1&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% endif %}
               <span data-feather="file-text"></span>
-              1 per page width
+              1 column
             </a>
           </li>
           <li class="nav-item">
             {% if display.display == '2' %}
-            <a class="nav-link active" href="?display=2&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link active" href="?display=2&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% else %}
-            <a class="nav-link" href="?display=2&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link" href="?display=2&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% endif %}
               <span data-feather="file-text"></span>
-              2 per page width
+              2 columns
             </a>
           </li>
           <li class="nav-item">
             {% if display.display == '3' %}
-            <a class="nav-link active" href="?display=3&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link active" href="?display=3&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% else %}
-            <a class="nav-link" href="?display=3&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link" href="?display=3&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% endif %}
               <span data-feather="file-text"></span>
-              3 per page width
+              3 columns
             </a>
           </li>
           <li class="nav-item">
             {% if display.display == '4' %}
-            <a class="nav-link active" href="?display=4&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link active" href="?display=4&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% else %}
-            <a class="nav-link" href="?display=4&page={{images.number}}&pictures={{display.pictures_per_page}}">
+            <a class="nav-link" href="?display=4&page={{images.number}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">
             {% endif %}
               <span data-feather="file-text"></span>
-              4 per page width
+              4 columns
             </a>
           </li>
         </ul>
@@ -113,25 +121,41 @@
           </h6>
           <ul class="nav flex-column mb-2">
             <li class="nav-item">
-              <a class="nav-link active" href="?display={{display.display}}&pictures=10">
+              {% if display.pictures_per_page == '10'%}
+              <a class="nav-link active" href="?display={{display.display}}&pictures=10&order={{display.order_by}}">
+              {% else %}
+              <a class="nav-link" href="?display={{display.display}}&pictures=10&order={{display.order_by}}">
+              {% endif %}
                 <span data-feather="file-text"></span>
                 10
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="?display={{display.display}}&pictures=25">
+                {% if display.pictures_per_page == '25'%}
+                <a class="nav-link active" href="?display={{display.display}}&pictures=25&order={{display.order_by}}">
+                {% else %}
+                <a class="nav-link" href="?display={{display.display}}&pictures=25&order={{display.order_by}}">
+                {% endif %}
                 <span data-feather="file-text"></span>
                 25
               </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="?display={{display.display}}&pictures=50">
+                {% if display.pictures_per_page == '50'%}
+              <a class="nav-link active" href="?display={{display.display}}&pictures=50&order={{display.order_by}}">
+              {% else %}
+              <a class="nav-link" href="?display={{display.display}}&pictures=50&order={{display.order_by}}">
+              {% endif %}
                   <span data-feather="file-text"></span>
                   50
                 </a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link" href="?display={{display.display}}&pictures=100">
+                  {% if display.pictures_per_page == '100'%}
+                  <a class="nav-link active" href="?display={{display.display}}&pictures=100&order={{display.order_by}}">
+                  {% else %}
+                  <a class="nav-link" href="?display={{display.display}}&pictures=100&order={{display.order_by}}">
+                  {% endif %}
                     <span data-feather="file-text"></span>
                     100
                   </a>
@@ -147,7 +171,7 @@
               
                 {% if images.has_previous %}
                   <li class="page-item">
-                    <a class="page-link" href="?page={{ images.previous_page_number }}&display={{display.display}}&pictures={{display.pictures_per_page}}" aria-label="Previous">
+                    <a class="page-link" href="?page={{ images.previous_page_number }}&display={{display.display}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}" aria-label="Previous">
                       <span aria-hidden="true">&laquo;</span>
                     </a>
                   </li>
@@ -166,11 +190,11 @@
 
 
                 {% if images.number == forloop.counter %}
-                <li class="page-item active"><a class="page-link" href="?page={{ forloop.counter }}&display={{display.display}}&pictures={{display.pictures_per_page}}">{{forloop.counter}}</a></li>
+                <li class="page-item active"><a class="page-link" href="?page={{ forloop.counter }}&display={{display.display}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">{{forloop.counter}}</a></li>
         
                   {% else %}
 
-                  <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}&display={{display.display}}&pictures={{display.pictures_per_page}}">{{forloop.counter}}</a></li>
+                  <li class="page-item"><a class="page-link" href="?page={{ forloop.counter }}&display={{display.display}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}">{{forloop.counter}}</a></li>
 
                   {% endif %}
 
@@ -178,7 +202,7 @@
 
                 {% if images.has_next %}
                   <li class="page-item">
-                    <a class="page-link" href="?page={{ images.next_page_number }}&display={{display.display}}&pictures={{display.pictures_per_page}}" aria-label="Next">
+                    <a class="page-link" href="?page={{ images.next_page_number }}&display={{display.display}}&pictures={{display.pictures_per_page}}&order={{display.order_by}}" aria-label="Next">
                      <span aria-hidden="true">&raquo;</span>
                     </a>
                   </li>

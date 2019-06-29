@@ -22,12 +22,17 @@ def random(request):
     return HttpResponse('Random pic here')
 
 def gallery(request):
-    all_images = Image.objects.all()
+    order_by = request.GET.get('order')
+    if order_by == "oldest":
+        all_images = Image.objects.order_by('image_added')
+    else:
+        all_images = Image.objects.order_by('-image_added')
+        order_by = "newest"
     these_categories = ImageCategory.objects.all()
 
     pictures_per_page = request.GET.get('pictures')
     if pictures_per_page == None:
-        pictures_per_page = 20
+        pictures_per_page = '25'
 
     images_per_width = request.GET.get('display')
     if images_per_width == "1":
@@ -42,6 +47,8 @@ def gallery(request):
         display_format = {"col_style":"col-6", "width":"w-100", "display":"2"}
     
     display_format.update({"pictures_per_page": pictures_per_page})
+    display_format.update({"order_by":order_by})
+
     paginator = Paginator(all_images, int(pictures_per_page))
 
     page = request.GET.get('page')
