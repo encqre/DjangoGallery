@@ -28,7 +28,20 @@ def gallery(request):
 
     page = request.GET.get('page')
     these_images = paginator.get_page(page)
-    return render(request, 'gallery/gallery.html', {"images": these_images, "categories": these_categories})
+
+    images_per_width = request.GET.get('display')
+    if images_per_width == "1":
+        display_format = {"col_style":"col-12", "width":"w-50", "display":"1"}
+    elif images_per_width == "2":
+        display_format = {"col_style":"col-6", "width":"w-100", "display":"2"}
+    elif images_per_width == "3":
+        display_format = {"col_style":"col-4", "width":"w-100", "display":"3"}
+    elif images_per_width == "4":
+        display_format = {"col_style":"col-3", "width":"w-100", "display":"4"}
+    else:
+        display_format = {"col_style":"col-6", "width":"w-100", "display":"2"}
+
+    return render(request, 'gallery/gallery.html', {"images": these_images, "categories": these_categories, "display": display_format})
 
 def category_slug(request, category_slug):
     return HttpResponse(f"{category_slug} is not a category. Yet.")
