@@ -1,20 +1,9 @@
-{% extends "gallery/header.html" %}
-
-{% block content %}
-
-<header class="masthead mb-auto">
-    <h3 class="masthead-brand">
-          {% load static %}
-          <img src="../../static/gallery/img/logo.png" alt="The Gallery">
-    </h3>
-    <nav class="nav nav-masthead justify-content-center">
-      <a class="nav-link" href="/">Home</a>
-      <a class="nav-link active" href="/gallery/">Gallery</a>
-      <a class="nav-link" href="/api/">API</a>
-    </nav>
-</header>
-
-<img src="{{image.image_url}}">
-
-
-{% endblock %} 
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, minimum-scale=0.1">
+      <title>{{image.image_title}}</title>
+  </head>
+  <body style="margin: 0px; background: #0e0e0e;">
+    <img style="-webkit-user-select: none; display: block; left: 50%; transform: translate(50%, 25%)" src="{{image.image_url}}">
+  </body>
+</html>

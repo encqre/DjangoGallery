@@ -8,7 +8,21 @@ def single_slug(request, single_slug):
     if single_slug in images:
         this_image = Image.objects.get(image_slug = single_slug)
         picture_url = this_image.image_url()
-        return render(request, 'gallery/image.html', {"image": this_image})
+        image_data = open("gallery" + picture_url, "rb").read()
+        if (picture_url.split(".")[-1] == "jpg") or (picture_url.split(".")[-1] == "jpeg") or (picture_url.split(".")[-1] == "jpe"):
+            response = HttpResponse(image_data, content_type="image/jpeg")
+            response['Content-Disposition'] = 'filename="' + this_image.image_title + '.jpg"'
+            return response
+        elif (picture_url.split(".")[-1] == "png"):
+            response = HttpResponse(image_data, content_type="image/png")
+            response['Content-Disposition'] = 'filename="' + this_image.image_title + '.png"'
+            return response
+        elif (picture_url.split(".")[-1] == "gif"):
+            response = HttpResponse(image_data, content_type="image/gif")
+            response['Content-Disposition'] = 'filename="' + this_image.image_title + '.gif"'
+            return response
+        else:
+            return HttpResponse("Unknown image mimetype.")
     else:
         return HttpResponse(f"{single_slug} is not an image yet.")
 
