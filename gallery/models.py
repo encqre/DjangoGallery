@@ -17,13 +17,13 @@ class Image(models.Model):
     image_picture = models.ImageField(upload_to = 'gallery/static/gallery/pictures/', default = 'gallery/static/gallery/pictures/default/no-img.jpg')
     image_added = models.DateTimeField("date added", default=datetime.now())
     image_description = models.CharField(max_length=200)
-    image_slug = models.CharField(max_length=200)
+    image_slug = models.CharField(max_length=200, unique=True)
     image_visible = models.BooleanField(default=False)
-    image_title = models.CharField(max_length=200)
+    image_title = models.CharField(max_length=200, unique=True)
     image_category = models.ManyToManyField(ImageCategory, verbose_name="Category")
 
     def image_url(self):
         return str(self.image_picture.name).lstrip("gallery")
 
     def __str__(self):
-        return self.image_title
+        return str(self.image_slug) + " - " + str(self.image_title)
