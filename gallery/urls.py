@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = "gallery"
@@ -9,6 +9,8 @@ urlpatterns = [
     path('gallery/', views.gallery, name="gallery"),
     path('api/', views.api, name="api"),
     path('api/random', views.random, name="random"),
-    path("id/<single_slug>", views.single_slug, name="single_slug"),
+    path("id/<int:pk>", views.image, name="image"),
     path('about/', views.about, name="about"),
+    path('api/v1/images/', views.api_image_list, name="api_image_list"),
+    path('api/v1/images/<int:pk>/', views.api_image, name="api_image"),
 ]

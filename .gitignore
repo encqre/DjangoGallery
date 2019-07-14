@@ -2,3 +2,4 @@ db.sqlite3
 DjangoGallery/__pycache__/
 gallery/__pycache__/
 gallery/static/gallery/pictures/
+gallery/migrations/

@@ -1,32 +1,55 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Image, ImageCategory
+from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
+from .models import Image, ImageCategory
+from .serializers import ImageSerializer
+from rest_framework import viewsets
+from rest_framework.parsers import JSONParser
 
 #TODO display order, pictures per page and display columns should be saved in cookie to not mess URL
 
-def single_slug(request, single_slug):
-    images = [p.image_slug for p in Image.objects.all()]
-    if single_slug in images:
-        this_image = Image.objects.get(image_slug = single_slug)
+def api_image_list(request):
+    if request.method == 'GET':
+        images = Image.objects.all()
+        serializer = ImageSerializer(images, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return HttpResponse('Only GET method is allowed for now')
+
+def api_image(request, pk):
+    try:
+        image = Image.objects.get(pk=pk)
+    except Image.DoesNotExist:
+        return HttpResponse(status=404)
+    
+    if request.method == 'GET':
+        serializer = ImageSerializer(image)
+        return JsonResponse(serializer.data)
+    else:
+        return HttpResponse('Only GET method is allowed for now')
+
+def image(request, pk):
+    images = [p.pk for p in Image.objects.all()]
+    if pk in images:
+        this_image = Image.objects.get(pk=pk)
         picture_url = this_image.image_url()
         image_data = open("gallery" + picture_url, "rb").read()
         if (picture_url.split(".")[-1] == "jpg") or (picture_url.split(".")[-1] == "jpeg") or (picture_url.split(".")[-1] == "jpe"):
             response = HttpResponse(image_data, content_type="image/jpeg")
-            response['Content-Disposition'] = 'filename="' + "pepe_gallery_" + str(this_image.image_slug) + "_" + this_image.image_title + '.jpg"'
+            response['Content-Disposition'] = 'filename="' + str(this_image.uuid) + '.jpg"'
             return response
         elif (picture_url.split(".")[-1] == "png"):
             response = HttpResponse(image_data, content_type="image/png")
-            response['Content-Disposition'] = 'filename="' + "pepe_gallery_" + str(this_image.image_slug) + "_" + this_image.image_title + '.png"'
+            response['Content-Disposition'] = 'filename="' + str(this_image.uuid) + '.png"'
             return response
         elif (picture_url.split(".")[-1] == "gif"):
             response = HttpResponse(image_data, content_type="image/gif")
-            response['Content-Disposition'] = 'filename="' + "pepe_gallery_" + str(this_image.image_slug) + "_" + this_image.image_title + '.gif"'
+            response['Content-Disposition'] = 'filename="' + str(this_image.uuid) + '.gif"'
             return response
         else:
             return HttpResponse("Unknown image mimetype.")
     else:
-        return HttpResponse(f"{single_slug} is not an image yet.")
+        return HttpResponse("No such image")
 
 def homepage(request):
     return render(request=request, template_name='gallery/home.html')
@@ -40,9 +63,9 @@ def random(request):
 def gallery(request):
     order_by = request.GET.get('order')
     if order_by == "oldest":
-        all_images = Image.objects.order_by('image_added')
+        all_images = Image.objects.order_by('date')
     else:
-        all_images = Image.objects.order_by('-image_added')
+        all_images = Image.objects.order_by('-date')
         order_by = "newest"
     these_categories = ImageCategory.objects.all()
 
@@ -75,12 +98,12 @@ def gallery(request):
     return render(request, 'gallery/gallery.html', {"images": these_images, "categories": these_categories, "display": display_format})
 
 def category_slug(request, category_slug):
-    category = ImageCategory.objects.filter(category_slug=category_slug)[0]
+    category = ImageCategory.objects.filter(slug=category_slug)[0]
     order_by = request.GET.get('order')
     if order_by == "oldest":
-        category_images = category.image_set.order_by('image_added')
+        category_images = category.image_set.order_by('date')
     else:
-        category_images = category.image_set.order_by('-image_added')
+        category_images = category.image_set.order_by('-date')
         order_by = "newest"
     these_categories = ImageCategory.objects.all()
 
@@ -102,7 +125,7 @@ def category_slug(request, category_slug):
     
     display_format.update({"pictures_per_page": pictures_per_page})
     display_format.update({"order_by":order_by})
-    display_format.update({"category":category.category_slug})
+    display_format.update({"category":category.slug})
     display_format.update({"total_images":str(len(category_images))})
 
     paginator = Paginator(category_images, int(pictures_per_page))

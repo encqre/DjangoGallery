@@ -64,10 +64,10 @@
               {% endif %}
               <div class="dropdown-divider"></div>
               {% for category in categories %}
-                {% if display.category != category.category_slug %}
-                <a class="dropdown-item" href="/gallery/{{category.category_slug}}?order={{display.order_by}}&display={{display.display}}&pictures={{display.pictures_per_page}}">{{category.category}} ({{category.image_set.all.count}})</a>
+                {% if display.category != category.slug %}
+                <a class="dropdown-item" href="/gallery/{{category.slug}}?order={{display.order_by}}&display={{display.display}}&pictures={{display.pictures_per_page}}">{{category.name}} ({{category.image_set.all.count}})</a>
                 {% else %}
-                <a class="dropdown-item active" href="#">{{category.category}} ({{category.image_set.all.count}})</a>
+                <a class="dropdown-item active" href="#">{{category.name}} ({{category.image_set.all.count}})</a>
                 {% endif %}
               {% endfor %}
             </div>
@@ -239,18 +239,18 @@
       {% for image in images %}
       <div class='{{display.col_style}}'>
       <div class="card mb-3 text-white bg-dark border-dark {{display.width}}" style="left: 50%; transform: translate(-50%)">
-        <a href="/id/{{image.image_slug}}" target="_blank">
-        <img src="{{image.image_url}}" class="card-img-top" alt="{{image.image_title}}">
+        <a href="/id/{{image.pk}}" target="_blank">
+        <img src="{{image.image_url}}" class="card-img-top" alt="{{image.title}}">
         </a>
         <div class="card-body">
-          <h5 class="card-text">{{image.image_title}}</h5>
+          <h5 class="card-text">{{image.title}}</h5>
         </div>
         <div class="card-footer">
-          <small class="text-muted">Image added: {{image.image_added}}</small>
+          <small class="text-muted">Image added: {{image.date}}</small>
           <div class="float-right">
           Categories:
-          {% for cat in image.image_category.all %}
-          <a href="/gallery/{{cat.category_slug}}?order={{display.order_by}}&display={{display.display}}&pictures={{display.pictures_per_page}}" class="btn btn-secondary btn-sm">{{cat.category}}</a>
+          {% for cat in image.category.all %}
+          <a href="/gallery/{{cat.slug}}?order={{display.order_by}}&display={{display.display}}&pictures={{display.pictures_per_page}}" class="btn btn-secondary btn-sm">{{cat.name}}</a>
           {% endfor %}
           </div>
         </div>
