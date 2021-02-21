@@ -1,0 +1,21 @@
+version: "3.9"
+   
+services:
+    dev-python:
+        build:
+            context: ..
+            dockerfile: .devcontainer/Dockerfile
+        working_dir: /workspace
+        expose:
+            - "8000"
+        entrypoint: /bin/sh
+        command: -c "sleep 365d"
+        volumes:
+            - ..:/workspace
+            - bash-history:/commandhistory
+            - venv_volume:/workspace/venv
+        ports:
+          - "8000:8000"
+volumes:
+    bash-history:
+    venv_volume:

@@ -3,3 +3,4 @@ DjangoGallery/__pycache__/
 gallery/__pycache__/
 gallery/static/gallery/pictures/
 gallery/migrations/
+venv/

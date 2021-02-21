@@ -1,0 +1,20 @@
+{% extends "gallery/header.html" %}
+
+{% block content %}
+<body class="text-center">
+    <nav class="navbar mb-auto fixed-top shadow">
+        {% load static %}
+        <img class="navbar-brand" src="../../static/gallery/img/logo.png" alt="The Gallery">
+        <nav class="navbar-nav">
+              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link" href="/gallery/">Gallery</a>
+              <a class="nav-link active" href="#">API</a>
+        </nav>
+      </nav>
+
+      <main role="main">
+            <h6 style="color:white;">This gallery provides REST API to query our database. </h6>
+
+      </main>
+
+{% endblock %} 

@@ -1,0 +1,14 @@
+{
+    "name": "Django gallery",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "dev-python",
+    "workspaceFolder": "/workspace",
+    "settings": {
+    	"python.venvFolders":[
+    		"venv",
+    		"${workspaceFolder}/venv"
+    	],
+    	"python.pythonPath": "venv/bin/python"
+    }
+  }
+  
