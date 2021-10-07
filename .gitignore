@@ -1,5 +1,5 @@
 db.sqlite3
-DjangoGallery/__pycache__/
+djangogallery/__pycache__/
 gallery/__pycache__/
 gallery/static/gallery/pictures/
 gallery/migrations/
