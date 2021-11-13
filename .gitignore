@@ -1,6 +1,6 @@
 db.sqlite3
 djangogallery/__pycache__/
 gallery/__pycache__/
-gallery/static/gallery/pictures/
 gallery/migrations/
+media/images/
 venv/
