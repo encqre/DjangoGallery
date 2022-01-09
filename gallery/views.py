@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt # TEMPORARY
 from django.core.paginator import Paginator
 from .models import Image, ImageCategory
 from .serializers import ImageSerializer, CategorySerializer
@@ -31,13 +32,21 @@ def api_image(request, pk):
         return HttpResponse('Only GET method is allowed for now')
 
 
+@csrf_exempt # TODO remove later
 def api_category_list(request):
     if request.method == 'GET':
         categories = ImageCategory.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return JsonResponse(serializer.data, safe=False)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = CategorySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
     else:
-        return HttpResponse('Only GET method is allowed for now')
+        return HttpResponse('Only GET and POST methods are allowed for now')
 
 
 def api_category(request, category_slug):
