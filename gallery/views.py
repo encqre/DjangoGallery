@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 from .models import Image, ImageCategory
-from .serializers import ImageSerializer
+from .serializers import ImageSerializer, CategorySerializer
 from rest_framework import viewsets
 from rest_framework.parsers import JSONParser
 import uuid
@@ -12,7 +12,7 @@ import uuid
 def api_image_list(request):
     if request.method == 'GET':
         images = Image.objects.all()
-        serializer = ImageSerializer(images, many=True)
+        serializer = ImageSerializer(images, many=True, context={"request":request})
         return JsonResponse(serializer.data, safe=False)
     else:
         return HttpResponse('Only GET method is allowed for now')
@@ -25,7 +25,29 @@ def api_image(request, pk):
         return HttpResponse(status=404)
     
     if request.method == 'GET':
-        serializer = ImageSerializer(image)
+        serializer = ImageSerializer(image, context={"request":request})
+        return JsonResponse(serializer.data)
+    else:
+        return HttpResponse('Only GET method is allowed for now')
+
+
+def api_category_list(request):
+    if request.method == 'GET':
+        categories = ImageCategory.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    else:
+        return HttpResponse('Only GET method is allowed for now')
+
+
+def api_category(request, category_slug):
+    try:
+        category = ImageCategory.objects.get(slug=category_slug)
+    except ImageCategory.DoesNotExist:
+        return HttpResponse(status=404)
+    
+    if request.method == 'GET':
+        serializer = CategorySerializer(category)
         return JsonResponse(serializer.data)
     else:
         return HttpResponse('Only GET method is allowed for now')
@@ -45,10 +67,6 @@ def homepage(request):
 
 def api(request):
     return render(request=request, template_name='gallery/api.html')
-
-
-def random(request):
-    return HttpResponse('Random pic here')
 
 
 def gallery(request):

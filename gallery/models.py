@@ -24,7 +24,6 @@ class Image(models.Model):
         return os.path.join(upload_to, filename)
     
     image = models.ImageField(upload_to=path_and_rename, default='background-magic.jpg')
-    # image = models.ImageField(default='background-magic.jpg')
     title = models.CharField(max_length=200, unique=True)
     date = models.DateTimeField("Date added", default=datetime.now())
     SFW = models.BooleanField(default=True)
