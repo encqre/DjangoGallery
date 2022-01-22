@@ -1,37 +1,63 @@
+from django.http.response import Http404
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt # TEMPORARY
+from django.http import HttpResponse
 from django.core.paginator import Paginator
 from .models import Image, ImageCategory
 from .serializers import ImageSerializer, CategorySerializer
-from rest_framework import viewsets, status, permissions
-from rest_framework.parsers import JSONParser
+from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-import uuid
+from rest_framework.views import APIView
 
 #TODO display order, images per page and display columns should be saved in cookie to not mess from 
 
-def api_image_list(request):
-    if request.method == 'GET':
+class ApiImageList(APIView):
+    def get(self, request):
         images = Image.objects.all()
-        serializer = ImageSerializer(images, many=True, context={"request":request})
-        return JsonResponse(serializer.data, safe=False)
-    else:
-        return HttpResponse('Only GET method is allowed for now')
+        serializer = ImageSerializer(images, many=True)
+        return Response(serializer.data)
 
+    """
+    Example:
+    curl -X POST -S \
+        -H "Content-Type: multipart/form-data" \
+        -H "Accept: application/json" \
+        -F "title=my image title" \
+        -F "image=@/path/to/img/image.jpg;type=image/jpg" \
+        http://localhost:8000/api/v1/images/
 
-def api_image(request, pk):
-    try:
-        image = Image.objects.get(pk=pk)
-    except Image.DoesNotExist:
-        return HttpResponse(status=404)
+    """
+    def post(self, request):
+        serializer = ImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ApiImageDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Image.objects.get(pk=pk)
+        except Image.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        image = self.get_object(pk)
+        serializer = ImageSerializer(image)
+        return Response(serializer.data)
+
+    def patch(self, request, pk):
+        image = self.get_object(pk)
+        serializer = ImageSerializer(image, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    if request.method == 'GET':
-        serializer = ImageSerializer(image, context={"request":request})
-        return JsonResponse(serializer.data)
-    else:
-        return HttpResponse('Only GET method is allowed for now')
+    def delete(self, request, pk):
+        image = self.get_object(pk)
+        image.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Using function based view approach

@@ -12,8 +12,8 @@ urlpatterns = [
     path('about/', views.about, name="about"),
     path('api/', views.api, name="api"),
     path('api/swagger/', get_swagger_view(title="API documentation")),
-    path('api/v1/images/', views.api_image_list, name="api_image_list"),
-    path('api/v1/images/<str:pk>/', views.api_image, name="api_image"),
+    path('api/v1/images/', views.ApiImageList.as_view(), name="api_image_list"),
+    path('api/v1/images/<str:pk>/', views.ApiImageDetail.as_view(), name="api_image"),
     path('api/v1/categories/', views.api_category_list, name="api_category_list"),
     path('api/v1/categories/<category_slug>/', views.api_category, name="api_category"),
 ]
