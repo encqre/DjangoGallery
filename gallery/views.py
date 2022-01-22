@@ -49,6 +49,7 @@ def api_category_list(request):
         return HttpResponse('Only GET and POST methods are allowed for now')
 
 
+@csrf_exempt # TODO remove later
 def api_category(request, category_slug):
     try:
         category = ImageCategory.objects.get(slug=category_slug)
@@ -58,8 +59,21 @@ def api_category(request, category_slug):
     if request.method == 'GET':
         serializer = CategorySerializer(category)
         return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = CategorySerializer(category, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        category.delete()
+        return HttpResponse(status=204)
+
     else:
-        return HttpResponse('Only GET method is allowed for now')
+        return HttpResponse('Only GET/PUT/DELETE methods are allowed')
 
 
 def image(request, pk):
