@@ -8,17 +8,14 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import mixins
+from rest_framework import generics
 
 #TODO display order, images per page and display columns should be saved in cookie to not mess from 
 
-class ApiImageList(APIView):
-    def get(self, request):
-        images = Image.objects.all()
-        serializer = ImageSerializer(images, many=True)
-        return Response(serializer.data)
-
+class ApiImageList(generics.ListCreateAPIView):
     """
-    Example:
+    Example of image upload:
     curl -X POST -S \
         -H "Content-Type: multipart/form-data" \
         -H "Accept: application/json" \
@@ -27,37 +24,13 @@ class ApiImageList(APIView):
         http://localhost:8000/api/v1/images/
 
     """
-    def post(self, request):
-        serializer = ImageSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
 
-class ApiImageDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Image.objects.get(pk=pk)
-        except Image.DoesNotExist:
-            raise Http404
 
-    def get(self, request, pk):
-        image = self.get_object(pk)
-        serializer = ImageSerializer(image)
-        return Response(serializer.data)
-
-    def patch(self, request, pk):
-        image = self.get_object(pk)
-        serializer = ImageSerializer(image, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pk):
-        image = self.get_object(pk)
-        image.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class ApiImageDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
 
 
 # Using function based view approach
