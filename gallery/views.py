@@ -2,8 +2,10 @@ from django.http.response import Http404
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator
+from django.contrib.auth.models import User
 from .models import Image, ImageCategory
-from .serializers import ImageSerializer, CategorySerializer
+from .serializers import ImageSerializer, CategorySerializer, UserSerializer
+from .permissions import IsCreatorOrReadOnly
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -26,16 +28,20 @@ class ApiImageList(generics.ListCreateAPIView):
     """
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 
 class ApiImageDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsCreatorOrReadOnly]
 
 # Using function based view approach
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def api_category_list(request):
     if request.method == 'GET':
         categories = ImageCategory.objects.all()
@@ -45,7 +51,7 @@ def api_category_list(request):
     elif request.method == 'POST':
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(created_by=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
@@ -53,7 +59,7 @@ def api_category_list(request):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
-@permission_classes((permissions.AllowAny,))
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,IsCreatorOrReadOnly))
 def api_category(request, category_slug):
     try:
         category = ImageCategory.objects.get(slug=category_slug)
@@ -77,6 +83,16 @@ def api_category(request, category_slug):
 
     else:
         return HttpResponse('Only GET/PUT/DELETE methods are allowed')
+
+
+class ApiUserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class ApiUserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 def image(request, pk):

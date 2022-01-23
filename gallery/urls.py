@@ -16,4 +16,6 @@ urlpatterns = [
     path('api/v1/images/<str:pk>/', views.ApiImageDetail.as_view(), name="api_image"),
     path('api/v1/categories/', views.api_category_list, name="api_category_list"),
     path('api/v1/categories/<category_slug>/', views.api_category, name="api_category"),
+    path('api/v1/users/', views.ApiUserList.as_view()),
+    path('api/v1/users/<int:pk>/', views.ApiUserDetail.as_view()),
 ]
