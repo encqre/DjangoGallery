@@ -1,8 +1,12 @@
 from django.urls import path, include
 from . import views
 from rest_framework_swagger.views import get_swagger_view
+from rest_framework.routers import DefaultRouter
 
 app_name = "gallery"
+
+router = DefaultRouter()
+router.register(r'users', views.ApiUserViewSet, basename="users")
 
 urlpatterns = [
     path('', views.homepage, name="homepage"),
@@ -16,6 +20,7 @@ urlpatterns = [
     path('api/v1/images/<str:pk>/', views.ApiImageDetail.as_view(), name="api_image"),
     path('api/v1/categories/', views.api_category_list, name="api_category_list"),
     path('api/v1/categories/<category_slug>/', views.api_category, name="api_category"),
-    path('api/v1/users/', views.ApiUserList.as_view()),
-    path('api/v1/users/<int:pk>/', views.ApiUserDetail.as_view()),
+    # path('api/v1/users/', views.ApiUserViewSet.as_view({'get': 'list'})),
+    # path('api/v1/users/<int:pk>/', views.ApiUserViewSet.as_view({'get': 'retrieve'})),
+    path('api/v1/', include(router.urls)),
 ]

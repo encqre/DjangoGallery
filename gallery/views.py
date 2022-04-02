@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework import viewsets
 
 #TODO display order, images per page and display columns should be saved in cookie to not mess from 
 
@@ -85,12 +86,7 @@ def api_category(request, category_slug):
         return HttpResponse('Only GET/PUT/DELETE methods are allowed')
 
 
-class ApiUserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class ApiUserDetail(generics.RetrieveAPIView):
+class ApiUserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
